@@ -1,0 +1,12 @@
+# Build output: node tools/build.mjs writes dist/<folder>/ and dist/<folder>.zip.
+/dist/
+node_modules/
+*.log
+
+# The Firebase web config for builds. Not secret (it ends up in every page),
+# but its key looks like a Google API key to secret scanners, so it stays on
+# the build machine. Copy firebase-config.example.json and paste the apiKey.
+firebase-config.json
+
+# The real PHP settings live on the server, outside public_html, never here.
+cgc-live-config.php

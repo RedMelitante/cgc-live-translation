@@ -1,0 +1,12 @@
+# CGC Live Translation. Without this, Apache sends no caching rules, and a
+# browser may keep running an old console or screen script for hours after an
+# update. "no-cache" means: check with the server every time. An unchanged
+# file comes back as a tiny 304, so pages still load fast on church wifi.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|js|mjs|css)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+# The proxy's answers are JSON for the console only; never list folders.
+Options -Indexes

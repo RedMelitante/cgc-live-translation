@@ -1,0 +1,10 @@
+{
+  "name": "cgc-live-translation",
+  "private": true,
+  "description": "Live sermon captions: operator console, big screen and phone page for cgcmultimedia.com/live",
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\"",
+    "build": "node tools/build.mjs"
+  }
+}

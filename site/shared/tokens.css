@@ -1,0 +1,63 @@
+/* CGC Live Translation: design tokens (Dsm design system), shared by the
+   console, the big screen and the phone page. Values come from
+   design-handoff/README.md and are final. */
+:root {
+  --indigo: #3B4EC8;
+  --indigo-dim: #2D3BA0;
+  --indigo-dark: #1E2780;
+  --indigo-light: #ECEFFE;
+  --cyan: #00CACC;
+  --cyan-light: #E0FAFA;
+  --cyan-text: #00696B;
+  --amber: #F5A623;
+  --amber-light: #FEF3DC;
+  --warning-text: #8A5A05;
+  --coral: #E8543A;
+  --coral-light: #FDEEEA;
+  --error-text: #9D2A18;
+  --success: #27AE60;
+  --success-bg: #E8F8EF;
+  --success-text: #1A7A41;
+  --charcoal: #2D3142;
+  --dark: #3D3D4E;
+  --mid: #6B6B80;
+  --muted: #9B9BAD;
+  --border: #E4E4F0;
+  --surface: #F7F7FC;
+  --white: #FFFFFF;
+  --caption-dim: #9BA6E8;
+
+  --font-head: 'Nunito', system-ui, sans-serif;
+  --font-ui: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+  --font-zh: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  --shadow-sm: 0 1px 4px rgba(45,49,66,.06);
+  --shadow-md: 0 4px 14px rgba(45,49,66,.10);
+  --shadow-lg: 0 8px 28px rgba(45,49,66,.13);
+  --glow: 0 4px 24px rgba(59,78,200,.20);
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --accent-bar: linear-gradient(90deg, #3B4EC8, #00CACC, #F5A623);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: var(--font-ui); color: var(--charcoal); -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; }
+a { color: var(--indigo); text-decoration: none; }
+a:hover { color: var(--indigo-dim); }
+[hidden] { display: none !important; }
+
+/* Every block of caption text carries lang="zh-CN" or lang="en", and gets
+   the font for that language, whichever direction the service runs in.
+   Attribute selectors, not :lang(), so the rule lands on the caption block
+   itself and children inherit it, instead of every descendant of <html>. */
+body [lang|="zh"] { font-family: var(--font-zh); }
+body [lang="en"] { font-family: var(--font-ui); }
+
+.mono-label {
+  font: 400 11px var(--font-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}

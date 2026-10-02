@@ -1,0 +1,9 @@
+{
+  "apiKey": "PASTE-THE-apiKey-FROM-FIREBASE-HERE",
+  "authDomain": "cgc-live.firebaseapp.com",
+  "databaseURL": "https://cgc-live-default-rtdb.asia-southeast1.firebasedatabase.app",
+  "projectId": "cgc-live",
+  "storageBucket": "cgc-live.firebasestorage.app",
+  "messagingSenderId": "185350645488",
+  "appId": "1:185350645488:web:dfbe9656cd3e941c0ac435"
+}

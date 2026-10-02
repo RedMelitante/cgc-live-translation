@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>body{margin:0;background:#F7F7FC;font-family:'DM Sans',system-ui,sans-serif;color:#2D3142}a{color:#3B4EC8;text-decoration:none}a:hover{color:#2D3BA0}textarea:focus{outline:none;border-color:#3B4EC8 !important}</style>
+</helmet>
+<div style="padding:56px 64px 80px;display:flex;flex-direction:column;gap:48px">
+  <div style="display:flex;flex-direction:column;gap:8px;max-width:900px">
+    <div style="font:500 14px 'DM Sans';color:#F5A623">Cagayan Gospel Church · Live sermon translation</div>
+    <div style="font:800 38px/1.15 Nunito;letter-spacing:-0.01em;color:#2D3142">Three screens, one live feed</div>
+    <div style="font:400 16px/1.8 'DM Sans';color:#6B6B80;text-wrap:pretty">A demo timer stands in for speech recognition. Lines wait in the operator's publish buffer, then appear on the big screen and the phone page at the same moment. Try Edit, Hold, or turning auto-publish off.</div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font:500 11px 'DM Mono';letter-spacing:.1em;text-transform:uppercase;color:#9B9BAD">01 · Operator console</span><span style="font:400 13px 'DM Sans';color:#6B6B80">Booth laptop · 1440 × 900</span></div>
+    <div data-screen-label="Operator console" style="width:1440px;height:900px;background:#F7F7FC;border:1px solid #E4E4F0;border-radius:16px;box-shadow:0 4px 14px rgba(45,49,66,0.10);overflow:hidden;display:flex;flex-direction:column">
+      <div style="height:4px;background:linear-gradient(90deg,#3B4EC8,#00CACC,#F5A623);flex:none"></div>
+      <div style="height:68px;flex:none;background:#FFFFFF;border-bottom:1px solid #E4E4F0;display:flex;align-items:center;gap:24px;padding:0 28px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:#3B4EC8;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font:900 15px Nunito">译</div>
+          <div style="display:flex;flex-direction:column">
+            <span style="font:800 17px/1.2 Nunito;color:#2D3142;white-space:nowrap">CGC Live Translation</span>
+            <span style="font:400 10px 'DM Mono';letter-spacing:.14em;text-transform:uppercase;color:#9B9BAD;white-space:nowrap">Operator console</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-left:8px;flex:none">
+          <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;background:{{ micBg }};color:{{ micFg }};font:500 13px 'DM Sans';white-space:nowrap;flex:none"><i class="ti ti-microphone" style="font-size:16px"></i>{{ micLabel }}</span>
+          <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;background:#E8F8EF;color:#1A7A41;font:500 13px 'DM Sans';white-space:nowrap;flex:none"><i class="ti ti-broadcast" style="font-size:16px"></i>Broadcast connected</span>
+          <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;background:#ECEFFE;color:#1E2780;font:500 13px 'DM Sans';white-space:nowrap;flex:none"><i class="ti ti-device-mobile" style="font-size:16px"></i>37</span>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:16px;flex:none">
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+            <span style="font:400 10px 'DM Mono';letter-spacing:.14em;text-transform:uppercase;color:#9B9BAD;white-space:nowrap">Chars this month</span>
+            <span style="font:500 13px 'DM Mono';color:#2D3142;white-space:nowrap">{{ charsUsed }} / 500k</span>
+          </div>
+          <div style="display:flex;background:#F7F7FC;border:1px solid #E4E4F0;border-radius:100px;padding:3px;gap:2px"><sc-for list="{{ dirTabs }}" as="d" hint-placeholder-count="2"><button onClick="{{ d.onPick }}" style="height:32px;padding:0 14px;border-radius:100px;border:none;cursor:pointer;font:600 13px 'DM Sans';white-space:nowrap;background:{{ d.bg }};color:{{ d.fg }};box-shadow:{{ d.shadow }}">{{ d.label }}</button></sc-for></div>
+          <button onClick="{{ toggleAuto }}" style="display:flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;border-radius:100px;border:1.5px solid #E4E4F0;background:#FFFFFF;cursor:pointer;font:600 14px 'DM Sans';color:#2D3142;white-space:nowrap">
+            <span style="width:36px;height:20px;border-radius:100px;background:{{ autoTrack }};position:relative;transition:background .18s"><span style="position:absolute;top:2px;left:{{ autoKnob }};width:16px;height:16px;border-radius:100px;background:#FFFFFF;box-shadow:0 1px 4px rgba(45,49,66,0.2);transition:left .18s"></span></span>
+            Auto-publish
+          </button>
+          <button onClick="{{ togglePause }}" style="display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:100px;border:none;background:{{ pauseBg }};color:#FFFFFF;cursor:pointer;font:600 14px 'DM Sans';white-space:nowrap" style-active="transform:scale(.97)"><i class="ti {{ pauseIcon }}" style="font-size:16px"></i>{{ pauseLabel }}</button>
+        </div>
+      </div>
+
+      <div style="flex:1;min-height:0;display:grid;grid-template-columns:420px minmax(0,1fr) 360px;gap:20px;padding:20px 28px 24px">
+        <div style="display:flex;flex-direction:column;gap:20px;min-height:0">
+          <div style="background:#FFFFFF;border:1px solid #E4E4F0;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font:400 11px 'DM Mono';letter-spacing:.1em;text-transform:uppercase;color:#9B9BAD">Hearing now · {{ srcName }}</span>
+              <span style="display:flex;align-items:flex-end;gap:3px;height:16px">
+                <sc-for list="{{ levels }}" as="lv" hint-placeholder-count="6"><span style="width:4px;border-radius:2px;background:#00CACC;height:{{ lv.h }}"></span></sc-for>
+              </span>
+            </div>
+            <div style="font-weight:500;font-size:20px;line-height:1.5;font-family:{{ subFont }};color:#2D3142;min-height:90px;text-wrap:pretty">{{ interim }}<span style="display:inline-block;width:2px;height:20px;background:#3B4EC8;vertical-align:-3px;margin-left:2px"></span></div>
+            <div style="font:400 12px 'DM Sans';color:#9B9BAD">Chrome speech recognition · USB audio interface, channel 1</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <span style="font:400 11px 'DM Mono';letter-spacing:.1em;text-transform:uppercase;color:#9B9BAD">On the big screen now</span>
+            <div style="aspect-ratio:16/9;border-radius:10px;background:#1E2780;padding:20px 24px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;overflow:hidden">
+              <div style="font-weight:700;font-size:22px;line-height:1.4;font-family:{{ mainFont }};color:#FFFFFF;text-wrap:pretty">{{ current.main }}</div>
+              <sc-if value="{{ showEnglishBig }}" hint-placeholder-val="{{ true }}"><div style="font-weight:400;font-size:12px;line-height:1.5;font-family:{{ subFont }};color:#E0FAFA">{{ current.sub }}</div></sc-if>
+            </div>
+          </div>
+
+          <div style="background:#FFFFFF;border:1px solid #E4E4F0;border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-top:auto">
+            <div style="width:72px;height:72px;border-radius:6px;background:repeating-conic-gradient(#2D3142 0 25%,#FFFFFF 0 50%) 0 0/12px 12px;border:4px solid #FFFFFF;outline:1px solid #E4E4F0;flex:none"></div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <span style="font:700 15px Nunito;color:#2D3142">Phone page QR</span>
+              <span style="font:400 13px 'DM Mono';color:#6B6B80">cgcmultimedia.com/live</span>
+              <a href="#phone" style="font:600 13px 'DM Sans';color:#3B4EC8">Show on big screen →</a>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;min-height:0">
+          <div style="display:flex;align-items:baseline;justify-content:space-between">
+            <span style="font:800 20px Nunito;color:#2D3142">Publish queue</span>
+            <span style="font:400 13px 'DM Sans';color:#6B6B80">{{ queueNote }}</span>
+          </div>
+          <div style="flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:12px">
+            <sc-if value="{{ queueEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1.5px dashed #E4E4F0;border-radius:16px;padding:40px;text-align:center;font:400 15px 'DM Sans';color:#9B9BAD">Waiting for the next line from the pastor's mic.</div>
+            </sc-if>
+            <sc-for list="{{ pending }}" as="p" hint-placeholder-count="2">
+              <div style="background:#FFFFFF;border:1.5px solid {{ p.border }};border-radius:16px;overflow:hidden;box-shadow:0 1px 4px rgba(45,49,66,0.06)">
+                <div style="height:4px;background:#ECEFFE"><div style="height:4px;width:{{ p.pct }};background:{{ p.barColor }};transition:width .25s linear"></div></div>
+                <div style="padding:16px 20px;display:flex;flex-direction:column;gap:10px">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font:400 11px 'DM Mono';letter-spacing:.1em;text-transform:uppercase;color:#9B9BAD">Line {{ p.id }}</span>
+                    <span style="font:500 12px 'DM Mono';letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:{{ p.statusBg }};color:{{ p.statusFg }}">{{ p.status }}</span>
+                  </div>
+                  <div style="font-weight:400;font-size:14px;line-height:1.6;font-family:{{ subFont }};color:#6B6B80">{{ p.src }}</div>
+                  <sc-if value="{{ p.notEditing }}" hint-placeholder-val="{{ true }}">
+                    <div style="font-weight:500;font-size:22px;line-height:1.5;font-family:{{ mainFont }};color:#2D3142;text-wrap:pretty">{{ p.tgt }}</div>
+                  </sc-if>
+                  <sc-if value="{{ p.editing }}" hint-placeholder-val="{{ false }}">
+                    <textarea value="{{ p.draft }}" onChange="{{ p.onDraft }}" rows="2" style="font-weight:500;font-size:20px;line-height:1.5;font-family:{{ mainFont }};color:#2D3142;border:1.5px solid #3B4EC8;border-radius:10px;padding:10px 12px;resize:none;box-shadow:0 4px 24px rgba(59,78,200,0.20)"></textarea>
+                  </sc-if>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <sc-if value="{{ p.notEditing }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ p.onEdit }}" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:100px;border:1.5px solid #E4E4F0;background:#FFFFFF;cursor:pointer;font:600 13px 'DM Sans';color:#2D3142" style-hover="background:#F7F7FC"><i class="ti ti-pencil" style="font-size:15px"></i>Edit</button>
+                      <button onClick="{{ p.onHold }}" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:100px;border:1.5px solid #E4E4F0;background:#FFFFFF;cursor:pointer;font:600 13px 'DM Sans';color:#2D3142" style-hover="background:#F7F7FC"><i class="ti {{ p.holdIcon }}" style="font-size:15px"></i>{{ p.holdLabel }}</button>
+                    </sc-if>
+                    <sc-if value="{{ p.editing }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ p.onSave }}" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:100px;border:1.5px solid #3B4EC8;background:#ECEFFE;cursor:pointer;font:600 13px 'DM Sans';color:#3B4EC8"><i class="ti ti-check" style="font-size:15px"></i>Save edit</button>
+                    </sc-if>
+                    <button onClick="{{ p.onDiscard }}" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:100px;border:none;background:transparent;cursor:pointer;font:600 13px 'DM Sans';color:#9D2A18" style-hover="background:#FDEEEA"><i class="ti ti-trash" style="font-size:15px"></i>Discard</button>
+                    <button onClick="{{ p.onPublish }}" style="margin-left:auto;display:flex;align-items:center;gap:6px;padding:7px 16px;border-radius:100px;border:none;background:#3B4EC8;cursor:pointer;font:600 13px 'DM Sans';color:#FFFFFF" style-hover="background:#2D3BA0;box-shadow:0 4px 24px rgba(59,78,200,0.20)" style-active="transform:scale(.97)">Publish now<i class="ti ti-arrow-right" style="font-size:15px"></i></button>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="background:#FFFFFF;border:1px solid #E4E4F0;border-radius:16px;display:flex;flex-direction:column;min-height:0;overflow:hidden">
+          <div style="padding:16px 20px;border-bottom:1px solid #E4E4F0;display:flex;align-items:baseline;justify-content:space-between">
+            <span style="font:800 17px Nunito;color:#2D3142">Published</span>
+            <span style="font:400 11px 'DM Mono';letter-spacing:.1em;text-transform:uppercase;color:#9B9BAD">{{ publishedCount }} lines</span>
+          </div>
+          <div style="flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column">
+            <sc-for list="{{ historyDesc }}" as="h" hint-placeholder-count="4">
+              <div style="padding:12px 20px;border-bottom:1px solid #E4E4F0;display:flex;flex-direction:column;gap:4px">
+                <div style="display:flex;gap:8px;align-items:center"><span style="font:400 11px 'DM Mono';color:#9B9BAD">{{ h.time }}</span><sc-if value="{{ h.edited }}" hint-placeholder-val="{{ false }}"><span style="font:500 10px 'DM Mono';letter-spacing:.08em;text-transform:uppercase;color:#8A5A05;background:#FEF3DC;padding:2px 6px;border-radius:3px">Edited</span></sc-if></div>
+                <div style="font-weight:500;font-size:15px;line-height:1.5;font-family:{{ mainFont }};color:#2D3142">{{ h.main }}</div>
+                <div style="font-weight:400;font-size:12px;line-height:1.5;font-family:{{ subFont }};color:#9B9BAD">{{ h.sub }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:48px;flex-wrap:wrap;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:baseline;gap:10px"><span style="font:500 11px 'DM Mono';letter-spacing:.1em;text-transform:uppercase;color:#9B9BAD">02 · Big screen</span><span style="font:400 13px 'DM Sans';color:#6B6B80">Projector · 16:9, shown at 1280 × 720</span></div>
+      <div data-screen-label="Big screen" style="width:1280px;height:720px;background:#1E2780;border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 8px 28px rgba(45,49,66,0.13)">
+        <div style="position:absolute;right:-160px;top:-160px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(0,202,204,0.16),rgba(0,202,204,0) 70%)"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:36px 64px 0;position:relative">
+          <span style="display:flex;align-items:center;gap:10px;font:500 14px 'DM Mono';letter-spacing:.14em;text-transform:uppercase;color:#E0FAFA"><span style="width:10px;height:10px;border-radius:50%;background:#00CACC"></span>{{ liveLabel }}</span>
+          <span style="font:500 14px 'DM Mono';letter-spacing:.14em;text-transform:uppercase;color:#E0FAFA">Scan for captions on your phone</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 64px 72px;gap:28px;position:relative">
+          <sc-if value="{{ hasPrevious }}" hint-placeholder-val="{{ true }}">
+            <div style="font-weight:500;font-size:34px;line-height:1.5;font-family:{{ mainFont }};color:#9BA6E8;text-wrap:pretty">{{ previous.main }}</div>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;gap:18px;border-top:2px solid rgba(224,250,250,0.18);padding-top:28px">
+            <div style="font-weight:700;font-size:64px;line-height:1.35;font-family:{{ mainFont }};color:#FFFFFF;letter-spacing:.01em;text-wrap:pretty">{{ current.main }}</div>
+            <sc-if value="{{ showEnglishBig }}" hint-placeholder-val="{{ true }}">
+              <div style="font-weight:500;font-size:28px;line-height:1.45;font-family:{{ subFont }};color:#E0FAFA;text-wrap:pretty">{{ current.sub }}</div>
+            </sc-if>
+          </div>
+        </div>
+        <div style="height:5px;background:linear-gradient(90deg,#3B4EC8,#00CACC,#F5A623)"></div>
+      </div>
+    </div>
+
+    <div id="phone" style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:baseline;gap:10px"><span style="font:500 11px 'DM Mono';letter-spacing:.1em;text-transform:uppercase;color:#9B9BAD">03 · Phone / QR page</span><span style="font:400 13px 'DM Sans';color:#6B6B80">390 × 844</span></div>
+      <div style="width:390px;height:844px;border-radius:52px;background:#2D3142;padding:12px;box-sizing:border-box;box-shadow:0 8px 28px rgba(45,49,66,0.13)">
+        <div data-screen-label="Phone page" style="width:100%;height:100%;border-radius:40px;background:#FFFFFF;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:48px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font:600 15px 'DM Sans';color:#2D3142"><span>{{ clock }}</span><span style="display:flex;gap:6px;font-size:16px"><i class="ti ti-wifi"></i><i class="ti ti-battery-3"></i></span></div>
+          <div style="padding:8px 20px 14px;border-bottom:1px solid #E4E4F0;display:flex;flex-direction:column;gap:12px;flex:none">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <span style="font:800 19px/1.2 Nunito;color:#2D3142">Cagayan Gospel Church</span>
+                <span style="display:flex;align-items:center;gap:6px;font:400 10px 'DM Mono';letter-spacing:.14em;text-transform:uppercase;color:#1A7A41"><span style="width:7px;height:7px;border-radius:50%;background:#27AE60"></span>Live sermon captions</span>
+              </div>
+              <button onClick="{{ cycleSize }}" style="width:44px;height:44px;border-radius:100px;border:1.5px solid #E4E4F0;background:#FFFFFF;cursor:pointer;font:700 15px Nunito;color:#3B4EC8">Aa</button>
+            </div>
+            <div style="display:flex;background:#F7F7FC;border-radius:100px;padding:4px;gap:4px">
+              <sc-for list="{{ langTabs }}" as="t" hint-placeholder-count="2">
+                <button onClick="{{ t.onPick }}" style="flex:1;height:36px;border-radius:100px;border:none;cursor:pointer;font:600 14px 'DM Sans';background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.shadow }}">{{ t.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:18px;padding:20px 20px 12px">
+            <sc-for list="{{ phoneLines }}" as="l" hint-placeholder-count="4">
+              <sc-if value="{{ l.isOld }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <div style="font-weight:400;font-size:{{ l.zhSize }};line-height:1.6;font-family:{{ mainFont }};color:#6B6B80">{{ l.main }}</div>
+                  <sc-if value="{{ phoneShowEn }}" hint-placeholder-val="{{ true }}"><div style="font-weight:400;font-size:13px;line-height:1.5;font-family:{{ subFont }};color:#9B9BAD">{{ l.sub }}</div></sc-if>
+                </div>
+              </sc-if>
+              <sc-if value="{{ l.isLatest }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:6px;background:#ECEFFE;border-radius:16px;padding:16px 18px">
+                  <div style="font-weight:700;font-size:{{ l.zhSizeLg }};line-height:1.55;font-family:{{ mainFont }};color:#1E2780;text-wrap:pretty">{{ l.main }}</div>
+                  <sc-if value="{{ phoneShowEn }}" hint-placeholder-val="{{ true }}"><div style="font-weight:400;font-size:14px;line-height:1.5;font-family:{{ subFont }};color:#3D3D4E">{{ l.sub }}</div></sc-if>
+                </div>
+              </sc-if>
+            </sc-for>
+          </div>
+          <div style="flex:none;padding:10px 20px 26px;text-align:center;font:400 12px 'DM Sans';color:#9B9BAD">Captions are machine-translated and checked by our media team.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;bufferSeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:8,&quot;min&quot;:3,&quot;max&quot;:20,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Behaviour&quot;},&quot;bigScreenMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;both&quot;,&quot;options&quot;:[&quot;both&quot;,&quot;chinese&quot;],&quot;tsType&quot;:&quot;'both' | 'chinese'&quot;,&quot;section&quot;:&quot;Big screen&quot;}}">
+const LINES = [
+  { en: "Good morning, church. Please open your Bibles to John chapter fifteen.", zh: "早安，教会。请打开圣经，翻到约翰福音第十五章。" },
+  { en: "Jesus said, I am the vine; you are the branches.", zh: "耶稣说：我是葡萄树，你们是枝子。" },
+  { en: "Whoever abides in me and I in him, he it is that bears much fruit.", zh: "常在我里面的，我也常在他里面，这人就多结果子。" },
+  { en: "For apart from me you can do nothing.", zh: "因为离了我，你们就不能做什么。" },
+  { en: "To abide means to remain, to stay connected day after day.", zh: "常在，意思是留下来，日复一日与祂保持连结。" },
+  { en: "Fruit is not something we manufacture. It grows out of that connection.", zh: "果子不是我们制造出来的，而是从这份连结中长出来的。" },
+  { en: "So this week, ask yourself: where am I trying to grow on my own?", zh: "所以这个星期，问问自己：我在哪些方面想靠自己成长？" },
+  { en: "Let us bow our heads and pray together.", zh: "让我们一起低头祷告。" }
+];
+const fmtTime = d => d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+class Component extends DCLogic {
+  state = {
+    cursor: 2, typed: 0, gap: 0, nextId: 3, paused: false, auto: true,
+    pending: [],
+    published: [
+      { id: 1, en: LINES[0].en, zh: LINES[0].zh, time: "10:41:52", edited: false },
+      { id: 2, en: LINES[1].en, zh: LINES[1].zh, time: "10:41:58", edited: false }
+    ],
+    lang: "both", size: 1, tick: 0, dir: "en-zh"
+  };
+  componentDidMount() { this.timer = setInterval(this.step, 250); }
+  componentWillUnmount() { clearInterval(this.timer); }
+  buffer() { return (this.props.bufferSeconds ?? 8) * 1000; }
+  step = () => this.setState(s => {
+    let { cursor, typed, gap, nextId, pending, published } = s;
+    if (!s.paused) {
+      const line = LINES[cursor % LINES.length];
+      if (gap > 0) gap -= 250;
+      else {
+        const srcTxt = s.dir === "en-zh" ? line.en : line.zh;
+        typed += s.dir === "en-zh" ? 4 : 1;
+        if (typed >= srcTxt.length) {
+          pending = [...pending, { id: nextId, en: line.en, zh: line.zh, draft: line.zh, remaining: this.buffer(), held: false, editing: false, edited: false }];
+          nextId++; cursor++; typed = 0; gap = 1200;
+        }
+      }
+    }
+    if (s.auto) pending = pending.map(p => (p.held || p.editing) ? p : { ...p, remaining: p.remaining - 250 });
+    const out = pending.filter(p => p.remaining <= 0);
+    if (out.length) {
+      pending = pending.filter(p => p.remaining > 0);
+      published = [...published, ...out.map(p => ({ id: p.id, en: p.en, zh: p.zh, time: fmtTime(new Date()), edited: p.edited }))].slice(-40);
+    }
+    return { cursor, typed, gap, nextId, pending, published, tick: s.tick + 1 };
+  });
+  upd(id, fn) { this.setState(s => ({ pending: s.pending.map(p => p.id === id ? { ...p, ...fn(p) } : p) })); }
+  publish(id) {
+    this.setState(s => {
+      const p = s.pending.find(x => x.id === id); if (!p) return null;
+      const tk = s.dir === "en-zh" ? "zh" : "en";
+      const val = p.editing ? p.draft : p[tk];
+      return { pending: s.pending.filter(x => x.id !== id), published: [...s.published, { id, en: p.en, zh: p.zh, [tk]: val, time: fmtTime(new Date()), edited: p.edited || val !== p[tk] }].slice(-40) };
+    });
+  }
+  renderVals() {
+    const s = this.state, buf = this.buffer();
+    const fwd = s.dir === "en-zh", tk = fwd ? "zh" : "en", sk = fwd ? "en" : "zh";
+    const tgtName = fwd ? "中文" : "English", srcName = fwd ? "English" : "中文";
+    const zhF = "'Noto Sans SC', sans-serif", enF = "'DM Sans', sans-serif";
+    const ms = o => o && ({ ...o, main: o[tk], sub: o[sk] });
+    const pub = s.published;
+    const current = ms(pub[pub.length - 1] || { en: "Captions will appear here", zh: "字幕将在这里显示" });
+    const previous = ms(pub[pub.length - 2]);
+    const showEnglishBig = (this.props.bigScreenMode ?? "both") === "both";
+    const pending = s.pending.map(p => {
+      const secs = Math.max(0, Math.ceil(p.remaining / 1000));
+      let status, statusBg, statusFg, barColor, border;
+      if (p.editing) { status = "Editing · paused"; statusBg = "#ECEFFE"; statusFg = "#1E2780"; barColor = "#3B4EC8"; border = "#3B4EC8"; }
+      else if (p.held) { status = "On hold"; statusBg = "#FEF3DC"; statusFg = "#8A5A05"; barColor = "#F5A623"; border = "#F5A623"; }
+      else if (!s.auto) { status = "Needs approval"; statusBg = "#FEF3DC"; statusFg = "#8A5A05"; barColor = "#F5A623"; border = "#E4E4F0"; }
+      else { status = `Publishes in ${secs}s`; statusBg = "#E0FAFA"; statusFg = "#00696B"; barColor = "#00CACC"; border = "#E4E4F0"; }
+      return {
+        ...p, src: p[sk], tgt: p[tk], status, statusBg, statusFg, barColor, border,
+        pct: `${Math.max(0, Math.min(100, 100 - (p.remaining / buf) * 100))}%`,
+        notEditing: !p.editing,
+        holdLabel: p.held ? "Resume" : "Hold", holdIcon: p.held ? "ti-player-play" : "ti-player-pause",
+        onEdit: () => this.upd(p.id, () => ({ editing: true, draft: p[tk] })),
+        onDraft: e => { const v = e.target.value; this.upd(p.id, () => ({ draft: v })); },
+        onSave: () => this.upd(p.id, x => ({ editing: false, edited: x.edited || x.draft !== x[tk], [tk]: x.draft, remaining: Math.max(x.remaining, 3000) })),
+        onHold: () => this.upd(p.id, x => ({ held: !x.held })),
+        onDiscard: () => this.setState(st => ({ pending: st.pending.filter(x => x.id !== p.id) })),
+        onPublish: () => this.publish(p.id)
+      };
+    });
+    const line = LINES[s.cursor % LINES.length];
+    const interim = s.paused ? "Recognition paused." : (s.gap > 0 ? "" : line[sk].slice(0, s.typed));
+    const lv = s.paused ? [0, 0, 0, 0, 0, 0] : [0, 1, 2, 3, 4, 5].map(i => 4 + Math.abs(Math.sin(s.tick * 0.9 + i * 1.7)) * 12);
+    const sizes = [[16, 20], [18, 23], [21, 27]][s.size];
+    const recent = pub.slice(-5);
+    return {
+      current, previous, hasPrevious: !!previous, showEnglishBig,
+      pending, queueEmpty: pending.length === 0,
+      queueNote: s.auto ? `Lines wait ${buf / 1000}s before going out` : "Auto-publish off · every line needs approval",
+      historyDesc: [...pub].reverse().map(ms),
+      mainFont: fwd ? zhF : enF, subFont: fwd ? enF : zhF, srcName,
+      dirLabel: fwd ? "EN → 中文" : "中文 → EN", liveLabel: fwd ? "Live · 中文字幕" : "Live · English captions",
+      dirTabs: [["en-zh", "EN → 中文"], ["zh-en", "中文 → EN"]].map(([k, label]) => ({
+        label, bg: s.dir === k ? "#3B4EC8" : "transparent", fg: s.dir === k ? "#FFFFFF" : "#6B6B80",
+        shadow: s.dir === k ? "0 4px 24px rgba(59,78,200,0.20)" : "none",
+        onPick: () => this.setState(st => st.dir === k ? null : { dir: k, typed: 0, gap: 600, pending: st.pending.map(x => ({ ...x, editing: false })) })
+      })), publishedCount: pub.length,
+      interim, levels: lv.map(h => ({ h: `${h}px` })),
+      micLabel: s.paused ? "Mic paused" : "Mic live", micBg: s.paused ? "#FDEEEA" : "#E8F8EF", micFg: s.paused ? "#9D2A18" : "#1A7A41",
+      pauseLabel: s.paused ? "Resume" : "Pause", pauseIcon: s.paused ? "ti-player-play" : "ti-player-pause", pauseBg: s.paused ? "#3B4EC8" : "#2D3142",
+      togglePause: () => this.setState(st => ({ paused: !st.paused })),
+      toggleAuto: () => this.setState(st => ({ auto: !st.auto })),
+      autoTrack: s.auto ? "#3B4EC8" : "#E4E4F0", autoKnob: s.auto ? "18px" : "2px",
+      charsUsed: (128400 + pub.reduce((n, p) => n + p.en.length, 0)).toLocaleString('en-US'),
+      clock: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+      phoneShowEn: s.lang === "both",
+      langTabs: [["both", tgtName + " + " + srcName], ["tgt", tgtName]].map(([k, label]) => ({
+        label, bg: s.lang === k ? "#FFFFFF" : "transparent", fg: s.lang === k ? "#3B4EC8" : "#6B6B80",
+        shadow: s.lang === k ? "0 1px 4px rgba(45,49,66,0.10)" : "none", onPick: () => this.setState({ lang: k })
+      })),
+      cycleSize: () => this.setState(st => ({ size: (st.size + 1) % 3 })),
+      phoneLines: recent.map((p, i) => ({ ...ms(p), isLatest: i === recent.length - 1, isOld: i !== recent.length - 1, zhSize: `${sizes[0]}px`, zhSizeLg: `${sizes[1]}px` }))
+    };
+  }
+}
+</script>
+</body>
+</html>

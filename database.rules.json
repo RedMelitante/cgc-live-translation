@@ -1,0 +1,61 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "session": {
+      ".read": true,
+      ".write": "auth != null && root.child('operators').child(auth.uid).val() === true",
+      "direction": { ".validate": "newData.val() === 'en-zh' || newData.val() === 'zh-en'" },
+      "autoPublish": { ".validate": "newData.isBoolean()" },
+      "bufferSeconds": { ".validate": "newData.isNumber() && newData.val() >= 3 && newData.val() <= 20" },
+      "paused": { ".validate": "newData.isBoolean()" },
+      "showSource": { ".validate": "newData.isBoolean()" },
+      "showQr": { ".validate": "newData.isBoolean()" },
+      "$other": { ".validate": false }
+    },
+
+    "queue": {
+      ".read": "auth != null && root.child('operators').child(auth.uid).val() === true",
+      ".write": "auth != null && root.child('operators').child(auth.uid).val() === true",
+      "$id": {
+        ".validate": "newData.hasChildren(['n', 'src', 'srcLang', 'tgtLang', 'status', 'createdAt'])",
+        "src": { ".validate": "newData.isString() && newData.val().length <= 2000" },
+        "tgt": { ".validate": "newData.isString() && newData.val().length <= 2000" },
+        "status": { ".validate": "newData.val() === 'translating' || newData.val() === 'pending' || newData.val() === 'held' || newData.val() === 'failed'" }
+      }
+    },
+
+    "published": {
+      ".read": true,
+      ".write": "auth != null && root.child('operators').child(auth.uid).val() === true",
+      ".indexOn": ["publishedAt"],
+      "$id": {
+        ".validate": "newData.hasChildren(['src', 'srcLang', 'tgtLang', 'publishedAt'])",
+        "src": { ".validate": "newData.isString() && newData.val().length <= 2000" },
+        "tgt": { ".validate": "newData.isString() && newData.val().length <= 2000" },
+        "publishedAt": { ".validate": "newData.isNumber()" }
+      }
+    },
+
+    "usage": {
+      ".read": "auth != null && root.child('operators').child(auth.uid).val() === true",
+      ".write": "auth != null && root.child('operators').child(auth.uid).val() === true"
+    },
+
+    "presence": {
+      ".read": "auth != null && root.child('operators').child(auth.uid).val() === true",
+      "$id": {
+        ".write": "!data.exists() || !newData.exists()",
+        ".validate": "newData.isNumber() && newData.val() <= now + 60000"
+      }
+    },
+
+    "operators": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    }
+  }
+}

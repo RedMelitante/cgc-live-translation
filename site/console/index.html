@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Operator console · CGC Live Translation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.48.0/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="../shared/tokens.css">
+<link rel="stylesheet" href="console.css">
+</head>
+<body>
+<div class="accent"></div>
+
+<header class="top">
+  <div class="brand">
+    <div class="mark">译</div>
+    <div class="brand-text">
+      <span class="brand-title">CGC Live Translation</span>
+      <span class="brand-sub">Operator console</span>
+    </div>
+  </div>
+  <div class="chips">
+    <span class="chip" id="chip-mic"><i class="ti ti-microphone"></i><span></span></span>
+    <span class="chip" id="chip-broadcast"><i class="ti ti-broadcast"></i><span></span></span>
+    <span class="chip chip-phones" id="chip-phones" title="Phones with the caption page open"><i class="ti ti-device-mobile"></i><span>0</span></span>
+  </div>
+  <div class="controls">
+    <div class="usage" title="Characters sent to Google Translate this month. The free tier covers 500,000.">
+      <span class="usage-label">Chars this month</span>
+      <span class="usage-value" id="usage">–</span>
+    </div>
+    <div class="seg" id="direction" role="radiogroup" aria-label="Translation direction">
+      <button data-dir="en-zh" role="radio">EN → 中文</button>
+      <button data-dir="zh-en" role="radio">中文 → EN</button>
+    </div>
+    <button class="toggle" id="auto" role="switch"><span class="track"><span class="knob"></span></span>Auto-publish</button>
+    <button class="pause" id="pause"><i class="ti"></i><span></span></button>
+  </div>
+</header>
+
+<div class="alert" id="alert" hidden><i class="ti ti-alert-triangle"></i><span></span><button aria-label="Dismiss"><i class="ti ti-x"></i></button></div>
+
+<main class="body" id="app" hidden>
+  <section class="left">
+    <div class="card hearing">
+      <div class="hearing-head">
+        <span class="mono-label" id="hearing-label">Hearing now · English</span>
+        <span class="meter" id="meter"><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <div class="interim" id="interim"><span class="interim-text"></span><span class="caret"></span></div>
+      <div class="hint" id="silence" hidden><i class="ti ti-volume-off"></i><span></span></div>
+      <div class="hearing-foot">
+        <label class="source">
+          <span>Line source</span>
+          <select id="source">
+            <option value="mic">Chrome speech recognition</option>
+            <option value="demo">Demo sermon (no mic)</option>
+            <option value="off">None, just watching</option>
+          </select>
+        </label>
+        <span id="device"></span>
+      </div>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="preview-head">
+        <span class="mono-label">On the big screen now</span>
+        <button class="link-btn" id="show-source"></button>
+      </div>
+      <div class="preview" id="preview">
+        <div class="preview-main"></div>
+        <div class="preview-sub"></div>
+      </div>
+    </div>
+
+    <div class="card qr-card">
+      <div class="qr" id="qr"></div>
+      <div class="qr-text">
+        <span class="qr-title">Phone page QR</span>
+        <span class="qr-url" id="qr-url"></span>
+        <button class="link-btn strong" id="show-qr"></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="middle">
+    <div class="queue-head">
+      <span class="h2">Publish queue</span>
+      <span class="queue-note" id="queue-note"></span>
+    </div>
+    <div class="queue" id="queue">
+      <div class="empty" id="queue-empty">Waiting for the next line from the pastor's mic.</div>
+    </div>
+  </section>
+
+  <section class="card published">
+    <div class="published-head">
+      <span class="h3">Published</span>
+      <span class="published-right">
+        <span class="mono-label" id="published-count">0 lines</span>
+        <button class="link-btn quiet" id="new-service" title="Clear the screens and the queue before a new service">New service</button>
+      </span>
+    </div>
+    <div class="history" id="history"></div>
+  </section>
+</main>
+
+<div class="signin" id="signin" hidden>
+  <form class="card signin-card" id="signin-form">
+    <div class="mark">译</div>
+    <span class="h2">Sign in to run captions</span>
+    <p class="signin-note" id="signin-note">Use the operator account set up in Firebase.</p>
+    <label>Email<input type="email" name="email" autocomplete="username" required></label>
+    <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
+    <p class="signin-error" id="signin-error" hidden></p>
+    <button class="primary" type="submit">Sign in</button>
+  </form>
+  <div class="card signin-card" id="not-operator" hidden>
+    <span class="h2">This account can’t run captions yet</span>
+    <p class="signin-note">Signed in as <b id="not-operator-email"></b>. To allow it, add this account’s ID under <code>operators</code> in the Firebase database, with the value <code>true</code>:</p>
+    <code class="uid" id="not-operator-uid"></code>
+    <button class="outline" id="signout">Sign out</button>
+  </div>
+</div>
+
+<div class="loading" id="loading">Connecting…</div>
+
+<script type="module" src="console.js"></script>
+</body>
+</html>

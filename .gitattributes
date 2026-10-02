@@ -1,0 +1,5 @@
+# Unix line endings in the repo; the build zips files as they are, and
+# mixed endings made every diff look like whole-file changes.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
